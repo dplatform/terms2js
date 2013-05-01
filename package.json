@@ -2,7 +2,6 @@
   "name": "MetadataReferenceData",
   "version": "0.1.0",
   "description": "This a basic and lightweight JavaScript and JSON version of EBU Reference Data & Classification Schemes. Stores the vocabularies as JSON objects, accesible as node modules or by browser javascript interpreter. Without any dependencies. The package is completely generic and may be used to generate your own hierarchical reference vocabularies expressed with the TV-Anytime XML Schema.",
-  "main": "ebu_RoleCodeCS.en.min.js",
   "scripts": {
     "build": "./build/build.sh",
     "test": "node ./test/node-example.js"

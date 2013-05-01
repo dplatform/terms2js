@@ -141,9 +141,9 @@ build/build.sh /path/to/vocs/specific-vocabulary-file.xml /path/to/my/output/dir
 See Also
 --------
 
-EBU Metadata Reference Data & Classification Schemes - http://tech.ebu.ch/MetadataReferenceData
-EBU Reference Data & Classification Schemes Tech 3336 - http://tech.ebu.ch/docs/tech/tech3336v1_1.pdf
-ETSI TS 102 822-3-1 V1.7.1 (2011-11) - http://www.etsi.org/deliver/etsi_ts/102800_102899/1028220301/01.07.01_60/ts_1028220301v010701p.pdf
+* EBU Metadata Reference Data & Classification Schemes - http://tech.ebu.ch/MetadataReferenceData
+* EBU Reference Data & Classification Schemes Tech 3336 - http://tech.ebu.ch/docs/tech/tech3336v1_1.pdf
+* ETSI TS 102 822-3-1 V1.7.1 (2011-11) - http://www.etsi.org/deliver/etsi_ts/102800_102899/1028220301/01.07.01_60/ts_1028220301v010701p.pdf
 
 Aknowledgments
 --------------
