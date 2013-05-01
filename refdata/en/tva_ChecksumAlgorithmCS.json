@@ -1,0 +1,1 @@
+{"terms":{"crc16":["CRC16 (ITU-T)"],"crc32":["CRC32 (MPEG-2)"],"crc64":["CRC64 (ISO)"],"crc64-ecma":["CRC64 (ECMA)"],"md5":["MD5"],"sha1":["SHA-1"]},"names":{"CRC16 (ITU-T)":["crc16"],"CRC32 (MPEG-2)":["crc32"],"CRC64 (ISO)":["crc64"],"CRC64 (ECMA)":["crc64-ecma"],"MD5":["md5"],"SHA-1":["sha1"]},"uri":"urn:tva:metadata-cs:ChecksumAlgorithmCS_2008","versionDate":"2013-01-07"}

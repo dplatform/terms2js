@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+    <title>Test EBU roles module</title>
+    <meta charset="utf-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <script src="../refdata/en/ebu_RoleCodeCS.min.js"></script>
+    <style>
+    body {
+        background-color: #eee;
+    }
+    .center {
+        width:700px;
+        margin:10px auto;
+        border:1px solid #ccc;
+        padding:20px;
+        background-color:#fff;
+    }
+    </style>
+</head>
+<body>
+    <div class="center">
+        <h1>Test EBU roles module (Browser client side)</h1>
+        <hr />
+        <div id="test"></div>
+    </div>
+    <script>
+        var num_roles = 0,
+        text = '';
+
+        // terms.getAllTermId() return an array of all EBU Role terms supported
+        var rolecodes = terms.getAllTermId();
+        // iterate this array
+        for (num_roles=0; num_roles<rolecodes.length; num_roles++) {
+            // save in text variable a string representation of the object return by terms.getTermInfo(termId)
+            var termId = rolecodes[num_roles];
+            text+='<b>'+termId+'</b> '+JSON.stringify(terms.getTermInfo(termId))+'<br />';
+        }
+        // save the number of roles supported
+        text = '<h2>Roles supported: '+num_roles+'</h2>'+text;
+        // write the test result in DOM element with id='test'
+        document.getElementById('test').innerHTML = text;
+    </script>
+</body>
+</html>
