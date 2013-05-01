@@ -8,7 +8,7 @@
 /*
  * Copyright 2013
  * Alberto Attilio Reggiori <alberto@derrickmedia.com>
- * https://github.com/dplatform/MetadataReferenceData
+ * https://github.com/dplatform/terms2js
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -194,7 +194,7 @@ for (var lang in json) {
 
         out_file = path.resolve (langdir, voc_file + ".min.js");
 
-        data = "/* From: https://github.com/dplatform/MetadataReferenceData */\n" + minijs;
+        data = "/* From: https://github.com/dplatform/terms2js */\n" + minijs;
 
         fs.writeFileSync (out_file, data);
         console.log("\tUglifyed to "+out_file);

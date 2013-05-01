@@ -1,5 +1,5 @@
-MetadataReferenceData
-=====================
+terms2js
+========
 
 This a basic and lightweight JavaScript and JSON version of EBU Reference Data & Classification Schemes.
 
@@ -98,9 +98,10 @@ console.log("What is the role code for 'Actor'? "+roles.getAllTermIdMatching ('A
 Build
 -----
 
-To built a new version of MetadataReferenceData, you need to install these node modules:
+To built a new version of vocabularies in refdata or transform your own, you need to install these node modules:
 
 ```sh
+npm install -g optimist
 npm install -g sax
 npm install -g uglify-js
 ```

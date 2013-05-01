@@ -54,7 +54,7 @@ if [ -d "$REFDATA" ]; then
   for i in $REFDATA/*.xml ; do
 
     echo "\nProcessing $i:\n"
-    node ./terms2js.js $i ${OUTPUT_DIR}
+    node ./terms2js $i ${OUTPUT_DIR}
 
   done
 
@@ -65,7 +65,7 @@ elif [ -f "$REFDATA" ]; then
     if [ $FILE_TYPE == "application/xml" ]; then
 
       echo "\nProcessing $REFDATA:\n"
-      node ./terms2js.js $REFDATA ${OUTPUT_DIR}
+      node ./terms2js $REFDATA ${OUTPUT_DIR}
 
     elif [ $FILE_TYPE == "application/zip" ]; then
 
@@ -73,7 +73,7 @@ elif [ -f "$REFDATA" ]; then
 
       for i in $TEMP_DIR/*.xml ; do
         echo "\nProcessing $i:\n"
-        node ./terms2js.js $i ${OUTPUT_DIR}
+        node ./terms2js $i ${OUTPUT_DIR}
       done
 
       rm -rf $TEMP_DIR
@@ -88,7 +88,7 @@ elif ! [ -f "$REFDATA" ]; then
 
   for i in $TEMP_DIR/*.xml ; do
     echo "\nProcessing $i:\n"
-    node ./terms2js.js $i ${OUTPUT_DIR}
+    node ./terms2js $i ${OUTPUT_DIR}
   done
 
   rm -rf $TEMP_DIR
