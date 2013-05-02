@@ -9,9 +9,9 @@
     "type": "git",
     "url": "git://github.com/dplatform/terms2js.git"
   },
-  "main": "lib/terms2js.js",
+  "main": "lib/termsapi.js",
   "bin": {
-    "terms2js": "bin/terms2js",
+    "terms2js": "bin/terms2js"
   },
   "dependencies": {
     "sax": "0.4.2"

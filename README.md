@@ -37,14 +37,18 @@ From javascript the JSON object is not accesible directly. You must use this pub
 *  **<vocabulary>.getAllTermId ()**: *Return an array with all the termId codes supported.*
 *  **<vocabulary>.getAllTermIdMatching (string)**: *Return an array with all the termId matching string.*
 *  **<vocabulary>.getTermInfo (termId)**: *Return object {"Name"}. If termId isn't supported return {}.*
+*  **<vocabulary>.isTermUri (term)**: *Return true if term is the fully qualified term URI, false otherwise.*
+*  **<vocabulary>.getUri ()**: *Return a string containing the vocabulary namespace URI.*
+*  **<vocabulary>.getVersionDate ()**: *Return a string containing the vocabulary namespace version date.*
+*  **<vocabulary>.getLang()**: *Return a string containing the vocabulary language.*
 
-See the test folder for use examples:
+See the test folder for more usage examples:
 
 ### From nodejs
 
 ```js
 // From node the module is accesible with a simple require
-var roles = require ('../test/en/ebu_RoleCodeCS.min.js');
+var roles = require ('../test/en/ebu_RoleCodeCS.min.js').Vocabulary;
 var num_roles = 0;
 
 // roles.getAllTermId () return an array of all EBU Role terms supported
@@ -70,9 +74,10 @@ console.log("What is the role code for 'Actor'? "+roles.getAllTermIdMatching ('A
 <html>
 <head>
     <title>Test EBU roles module</title>
-    <meta charset="utf-8"> 
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <script src="../test/en/ebu_RoleCodeCS.min.js"></script>
+    <!--<script src="../test/en/ebu_RoleCodeCS.min.js"></script>-->
+    <script src="../test/en/ebu_RoleCodeCS.js"></script>
     <style>
     body {
         background-color: #eee;
@@ -96,13 +101,13 @@ console.log("What is the role code for 'Actor'? "+roles.getAllTermIdMatching ('A
         var num_roles = 0,
         text = '';
 
-        // terms.getAllTermId() return an array of all EBU Role terms supported
-        var rolecodes = terms.getAllTermId();
+        // terms2js.en.ebu_RoleCodeCS.Vocabulary.getAllTermId() return an array of all EBU Role terms supported
+        var rolecodes = terms2js.en.ebu_RoleCodeCS.Vocabulary.getAllTermId();
         // iterate this array
         for (num_roles=0; num_roles<rolecodes.length; num_roles++) {
-            // save in text variable a string representation of the object return by terms.getTermInfo(termId)
+            // save in text variable a string representation of the object return by terms2js.en.ebu_RoleCodeCS.Vocabulary.getTermInfo(termId)
             var termId = rolecodes[num_roles];
-            text+='<b>'+termId+'</b> '+JSON.stringify(terms.getTermInfo(termId))+'<br />';
+            text+='<b>'+termId+'</b> '+JSON.stringify(terms2js.en.ebu_RoleCodeCS.Vocabulary.getTermInfo(termId))+'<br />';
         }
         // save the number of roles supported
         text = '<h2>Roles supported: '+num_roles+'</h2>'+text;

@@ -76,9 +76,8 @@ if (argv["default-lang"]) {
   default_lang = argv["default-lang"];
 }
 
-var header = fs.readFileSync (path.resolve(__dirname, 'header.js'));
+var license = fs.readFileSync (path.resolve(__dirname, 'license.txt'));
 var termsapi = fs.readFileSync (path.resolve(__dirname, '../lib/termsapi.js'));
-var footer = fs.readFileSync (path.resolve(__dirname, 'footer.js'));
 
 var files_tocompress = [];
 
@@ -87,20 +86,26 @@ for (var i=0 ; i < vocabulary_files.length ; i++) {
 
   console.log ("Processing vocabulary file "+vocabulary_file);
 
-  var converter = terms2js.createConverter ({default_lang: default_lang});
+  var parser = terms2js.createParser ({default_lang: default_lang});
 
   var data = fs.readFileSync (vocabulary_file, 'utf8');
 
-  converter.convertString (data);
+  parser.parseString (data);
 
-  var langs = converter.getAvailableLanguages ();
+  var langs = parser.getAvailableLanguages ();
 
   for (var j=0; j < langs.length ; j++) {
     var lang = langs[j];
 
-    var terms = JSON.stringify (converter.getTerms (lang));
+    var voc = parser.getVocabulary (lang);
 
-    //console.log (JSON.stringify (converter.getTerms (lang), null, '\t'));
+    if (!voc) {
+      continue;
+    }
+
+    var terms = voc.stringify ();
+
+    //console.log (voc.stringify (null, '\t'));
 
     var langdir = path.resolve(output_dir, lang);
 
@@ -116,8 +121,29 @@ for (var i=0 ; i < vocabulary_files.length ; i++) {
 
     files_tocompress.push (out_file);
 
+	   //"\nif (!exports[\""+lang+"\"]) { exports[\""+lang+"\"] = {}; }\n" +
+	   //"\nexports[\""+lang+"\"][\""+voc_file+"\"] = new Vocabulary (\""+lang+"\", " + terms + ")\n" +
     out_file = path.resolve (langdir, voc_file + ".js");
-    data = header + "\nvar voc = " + terms + "\n" + termsapi + footer;
+
+    var header = "//allow executing by nodejs in the server or by javascript in the browser\n" +
+ 		 "if (typeof exports === 'undefined') {\n"+
+                 "  if (!this[\"terms2js\"])\n" +
+                 "    this[\"terms2js\"] = {};\n" +
+                 "  if (!this[\"terms2js\"][\""+lang+"\"])\n" +
+                 "    this[\"terms2js\"][\""+lang+"\"] = {};\n" +
+                 "  this[\"terms2js\"][\""+lang+"\"][\""+voc_file+"\"] = {};\n" +
+                 "  exports = this[\"terms2js\"][\""+lang+"\"][\""+voc_file+"\"];\n" +
+                 "};\n" +
+                 "(function (exports){\n";
+    var footer = "})(exports);";
+
+    data = license +
+	   header +
+	   "//embed object json\n" +
+	   "//no accessible directly, you must use ../termsapi.js\n" +
+	   termsapi +
+	   "\nexports.Vocabulary = new Vocabulary (\""+lang+"\", " + terms + ")\n" +
+	   footer;
     fs.writeFileSync (out_file, data);
     console.log("\tGenerated "+out_file);
 

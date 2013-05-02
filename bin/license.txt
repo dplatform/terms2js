@@ -19,10 +19,3 @@
  * limitations under the License.
  *
  */
-
-;(function(exports){
-
-/* PRIVATE */
-
-//embed object json
-//no accessible directly, you must use isValid, getTermId, getTermUri, isDeprecated, getAllTermId, getTermInfo, getUri or getVersionDate

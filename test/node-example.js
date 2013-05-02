@@ -1,5 +1,5 @@
 // From node the module is accesible with a simple require
-var roles = require ('../test/en/ebu_RoleCodeCS.min.js');
+var roles = require ('../test/en/ebu_RoleCodeCS.min.js').Vocabulary;
 var num_roles = 0;
 
 // roles.getAllTermId () return an array of all EBU Role terms supported
