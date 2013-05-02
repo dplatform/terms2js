@@ -139,9 +139,9 @@ for (var i=0 ; i < vocabulary_files.length ; i++) {
 
     data = license +
 	   header +
-	   "//embed object json\n" +
-	   "//no accessible directly, you must use ../termsapi.js\n" +
+	   "//terms API\n" +
 	   termsapi +
+	   "//embed object json\n" +
 	   "\nexports.Vocabulary = new Vocabulary (\""+lang+"\", " + terms + ")\n" +
 	   footer;
     fs.writeFileSync (out_file, data);
