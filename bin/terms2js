@@ -77,7 +77,7 @@ if (argv["default-lang"]) {
 }
 
 var header = fs.readFileSync (path.resolve(__dirname, 'header.js'));
-var termapi = fs.readFileSync (path.resolve(__dirname, '../lib/termapi.js'));
+var termsapi = fs.readFileSync (path.resolve(__dirname, '../lib/termsapi.js'));
 var footer = fs.readFileSync (path.resolve(__dirname, 'footer.js'));
 
 var files_tocompress = [];
@@ -117,7 +117,7 @@ for (var i=0 ; i < vocabulary_files.length ; i++) {
     files_tocompress.push (out_file);
 
     out_file = path.resolve (langdir, voc_file + ".js");
-    data = header + "\nvar voc = " + terms + "\n" + termapi + footer;
+    data = header + "\nvar voc = " + terms + "\n" + termsapi + footer;
     fs.writeFileSync (out_file, data);
     console.log("\tGenerated "+out_file);
 
