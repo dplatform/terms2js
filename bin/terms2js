@@ -1,8 +1,9 @@
+#! /usr/bin/env node
+
+"use strict";
+
 /*
- * Extract all terms from input vocabulary
- * Usage: node terms2js.js vocabulary.xml output-dir [default_lang]
- * Output: One file for each language like vocabulary.en.json.
- *	   If the vocabulary does not use xml:lang output vocabulary.json.
+ * Extracts all terms from input vocabulary as JSON and Javascript
  */
 
 /*
@@ -27,189 +28,123 @@
  *
  */
 
-var fs = require('fs'),
-    path = require('path'),
-    util = require('util'),
-    sax = require('sax'),
-    exec = require('child_process').exec,
-    strict = true;
+var terms2js = require ('../lib/terms2js'),
+    optimist = require ('optimist'),
+    fs = require ('fs'),
+    path = require ('path'),
+    zlib = require ('zlib'),
+    gzip = zlib.createGzip(),
+    UglifyJS = require ('uglify-js');
 
-if (!process.argv[2]) {
-  console.log ("\tMissing vocabulary file.");
+var argv = optimist
+    .usage("\n$0 voc1.xml [voc2.xml ...] [options]")
+    .describe("output-dir", "Specify an output directory where to generate the JSON and Javascript vocabularies.")
+    .describe("default-lang", "Default language for output vocabularies if cannot be guessed from input sources (e.g. xml:lang). Default to 'en'.")
+    .string("output-dir")
+    .string("default-lang")
+    .wrap(80)
+    .argv;
+
+if (argv.help) {
+    console.__unset;
+    require('optimist').showHelp (console.log);
+    process.exit(0);
+}
+
+if (!argv["output-dir"]) {
+  console.log ("Output directory option must be specified and not empty.");
+  require('optimist').showHelp (console.log);
   process.exit (1);
 }
 
-if (!process.argv[3] || (!(fs.existsSync(process.argv[3])))) {
-  console.log ("\tMissing or invalid output directory.");
+if (!(fs.existsSync(argv["output-dir"]))) {
+  fs.mkdirSync (argv["output-dir"]);
+}
+
+var vocabulary_files = argv._.slice();
+
+if (vocabulary_files.length == 0) {
+  console.log ("Missing input vocabulary files.");
+  require('optimist').showHelp (console.log);
   process.exit (1);
 }
 
-var vocabulary_file = process.argv[2];
-var output_dir = process.argv[3];
-
+var output_dir = argv["output-dir"];
 var default_lang = 'en';
 
-if (process.argv[4]) {
-  default_lang = process.argv[4];
+if (argv["default-lang"]) {
+  default_lang = argv["default-lang"];
 }
 
-var parser = sax.parser(strict, {trim:true});
+var header = fs.readFileSync (path.resolve(__dirname, 'header.js'));
+var termapi = fs.readFileSync (path.resolve(__dirname, '../lib/termapi.js'));
+var footer = fs.readFileSync (path.resolve(__dirname, 'footer.js'));
 
-var uri;
-var versionDate;
-var termID;
+var files_tocompress = [];
 
-var json = {};
-var tags = [];
-var langs = [];
+for (var i=0 ; i < vocabulary_files.length ; i++) {
+  var vocabulary_file = vocabulary_files[i];
 
-parser.onopentag = function (node) {
-  tags.push (node.name);
+  console.log ("Processing vocabulary file "+vocabulary_file);
 
-  if (node.name === "ClassificationScheme") {
-    if (node.attributes) {
-      if (node.attributes.uri) {
-        uri = node.attributes.uri;
-      }
-      if (node.attributes.versionDate) {
-        versionDate = node.attributes.versionDate;
-      }
-    }
-  }
+  var converter = terms2js.createConverter ({default_lang: default_lang});
 
-  if (node.name === "Term" && node.attributes && node.attributes.termID) {
-    termID = node.attributes.termID;
-  }
+  var data = fs.readFileSync (vocabulary_file, 'utf8');
 
-  if (node.name === "Name" || node.name === "Definition") {
-    if (node.attributes && node.attributes["xml:lang"]) {
-      langs.push (node.attributes["xml:lang"]);
-    } else {
-      langs.push (default_lang);
-    }
-    if (!json[langs[langs.length-1]]) {
-      json[langs[langs.length-1]] = {
-	"terms": {},
-	"names": {},
-	/*"definitions": {},*/
-	"deprecated": []
-      };
-    }
+  converter.convertString (data);
 
-    if (!json[langs[langs.length-1]].terms[termID]) {
-      json[langs[langs.length-1]].terms[termID] = [];
-    }
-  }
-};
+  var langs = converter.getAvailableLanguages ();
 
-parser.onclosetag = function (tag) {
-  tags.pop ();
+  for (var j=0; j < langs.length ; j++) {
+    var lang = langs[j];
 
-  if (tag === "Name" || tag === "Definition") {
-    langs.pop ();
-  }
-}
+    var terms = JSON.stringify (converter.getTerms (lang));
 
-parser.ontext = function (text) {
+    //console.log (JSON.stringify (converter.getTerms (lang), null, '\t'));
 
-  if (tags[tags.length-1] === "ValidityFlag" && text && !text.match(/(1|yes|on)/)) {
-    for (var l in json) {
-      json[l].deprecated.push (termID);
-    }
-  }
+    var langdir = path.resolve(output_dir, lang);
 
-  if (tags[tags.length-1] === "Name") {
-    var values = text.replace (/[\n\r\t\f]/gi, "").split (" / ");
-    json[langs[langs.length-1]].terms[termID].push.apply (json[langs[langs.length-1]].terms[termID], values);
-    for (var i=0 ; i < values.length ; i++) {
-      if (!json[langs[langs.length-1]].names[values[i]]) {
-        json[langs[langs.length-1]].names[values[i]] = []
-      }
-      json[langs[langs.length-1]].names[values[i]].push (termID);
-    }
-  }
+    if (!fs.existsSync (langdir))
+      fs.mkdirSync (langdir);
 
-  if (tags[tags.length-1] === "Definition") {
-    // NOTE - try to be clever and use a Definition in a given language definition if no Name defined
-    //	      For example see the defintions in ebu_ParentalGuidanceCodeCS.xml
-    if (json[langs[langs.length-1]].terms[termID].length == 0) {
-      var val = text.replace (/[\n\r\t\f]/gi, "");
-      json[langs[langs.length-1]].terms[termID].push (val);
-      if (!json[langs[langs.length-1]].names[val]) {
-        json[langs[langs.length-1]].names[val] = [];
-      }
-      json[langs[langs.length-1]].names[val].push (termID);
-    }
+    var voc_file = vocabulary_file.replace (".xml", "").split (path.sep).pop ();
 
-    // NOTE - the following is not used yet
-    //json[langs[langs.length-1]].definitions[termID] = text;
-  }
-}
-
-var data = fs.readFileSync(path.resolve(__dirname, vocabulary_file), 'utf8');
-
-parser.write(data).close();
-
-//console.log (JSON.stringify(json, null, '\t'));
-
-for (var lang in json) {
-  json[lang].uri = uri;
-  json[lang].versionDate = versionDate;
-
-  if (json[lang].deprecated.length == 0)
-    delete json[lang].deprecated;
-
-  var langdir = path.resolve(output_dir, lang);
-
-  if (!fs.existsSync (langdir))
-    fs.mkdirSync (langdir);
-
-  var voc_file = vocabulary_file.replace (".xml", "").split (path.sep).pop ();
-
-  var out_file = path.resolve (langdir, voc_file + ".json");
-
-  var data = JSON.stringify(json[lang]);
-
-  fs.writeFileSync (out_file, data);
-  console.log("\tGenerated "+out_file);
-
-  exec ('gzip -9 -c ' + out_file + ' > ' + out_file + '.gz', function (err, stdout, stderr) {
-    if (!err) {
-      console.log("\tCompressed "+out_file+".gz");
-    } 
-
-    var header = fs.readFileSync (path.resolve(__dirname, 'header.js'));
-    var footer = fs.readFileSync (path.resolve(__dirname, 'footer.js'));
-
-    out_file = path.resolve (langdir, voc_file + ".js");
-
-    data = header + "\nvar voc = " + JSON.stringify(json[lang]) + "\n" + footer;
-
+    var out_file = path.resolve (langdir, voc_file + ".json");
+    var data = terms;
     fs.writeFileSync (out_file, data);
     console.log("\tGenerated "+out_file);
 
-    exec ('uglifyjs ' + out_file, function (err, stdout, stderr) {
-      if (!err) {
-        var minijs = stdout;
+    files_tocompress.push (out_file);
 
-        out_file = path.resolve (langdir, voc_file + ".min.js");
+    out_file = path.resolve (langdir, voc_file + ".js");
+    data = header + "\nvar voc = " + terms + "\n" + termapi + footer;
+    fs.writeFileSync (out_file, data);
+    console.log("\tGenerated "+out_file);
 
-        data = "/* From: https://github.com/dplatform/terms2js */\n" + minijs;
+    out_file = path.resolve (langdir, voc_file + ".min.js");
+    data = "/* From: https://github.com/dplatform/terms2js */\n" + UglifyJS.minify (data, {fromString:true}).code;
+    fs.writeFileSync (out_file, data);
+    console.log("\tUglifyed to "+out_file);
 
-        fs.writeFileSync (out_file, data);
-        console.log("\tUglifyed to "+out_file);
-
-        exec ('gzip -9 -c ' + out_file + ' > ' + out_file + '.gz', function (err, stdout, stderr) {
-          if (!err) {
-            console.log("\tCompressed "+out_file+".gz");
-          } 
-        });
-      } 
-    });
-  });
-
-/*
-touch languages.min.js languages.min.js.gz
-touch languages.json languages.json.gz
-*/
+    files_tocompress.push (out_file);
+  }
 }
+
+console.log("Compressing generated files");
+
+(function compress () {
+  var file = files_tocompress.pop ();
+  if (file) {
+    zlib.gzip (data, function (err, buffer) {
+      if (!err) {
+        fs.writeFileSync (file + ".gz", buffer);
+
+        console.log("\tCompressed "+file+ ".gz");
+
+        compress ();
+      }
+    });
+  } else {
+    console.log("All done, results are in directory '"+argv["output-dir"]+"'");
+  }
+})();

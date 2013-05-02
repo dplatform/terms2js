@@ -1,14 +1,32 @@
 terms2js
 ========
 
-This a basic and lightweight JavaScript and JSON version of EBU Reference Data & Classification Schemes.
+This a basic and lightweight JavaScript and JSON version of Metadata Reference Data & Classification Schemes.
 
-Stores the vocabularies as JSON objects, accesible as node modules or by browser javascript interpreter. Without any dependencies.
+Stores the vocabularies as JSON objects, accesible as node modules or by browser javascript interpreter. Generated vocabulariy files have no dependencies and can be used stand-alone.
 
-The package is completely generic and may be used to generate your own hierarchical reference vocabularies expressed with the TV-Anytime XML Schema.
+The package is completely generic and may be used to generate your own hierarchical reference vocabularies such as the ones expressed with the TV-Anytime XML Schema.
 
-Use
----
+Command line
+------------
+
+To built a new version of vocabularies in refdata or transform your own you can use the 'terms2js' command.
+
+Note: In order to run the 'terms2js' command you need to install these node modules:
+
+```sh
+npm install -g optimist
+npm install -g uglify-js
+```
+
+For example
+
+```sh
+terms2js test/*.xml --output-dir test
+```
+
+Generated Vocabularies usage
+----------------------------
 
 From javascript the JSON object is not accesible directly. You must use this public functions:
 
@@ -26,7 +44,7 @@ See the test folder for use examples:
 
 ```js
 // From node the module is accesible with a simple require
-var roles = require ('../refdata/en/ebu_RoleCodeCS.min.js');
+var roles = require ('../test/en/ebu_RoleCodeCS.min.js');
 var num_roles = 0;
 
 // roles.getAllTermId () return an array of all EBU Role terms supported
@@ -54,7 +72,7 @@ console.log("What is the role code for 'Actor'? "+roles.getAllTermIdMatching ('A
     <title>Test EBU roles module</title>
     <meta charset="utf-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <script src="../refdata/en/ebu_RoleCodeCS.min.js"></script>
+    <script src="../test/en/ebu_RoleCodeCS.min.js"></script>
     <style>
     body {
         background-color: #eee;
@@ -93,50 +111,6 @@ console.log("What is the role code for 'Actor'? "+roles.getAllTermIdMatching ('A
     </script>
 </body>
 </html>
-```
-
-Build
------
-
-To built a new version of vocabularies in refdata or transform your own, you need to install these node modules:
-
-```sh
-npm install -g optimist
-npm install -g sax
-npm install -g uglify-js
-```
-
-And then execute
-
-```sh
-build/build.sh
-```
-By default it will retrieve http://www.ebu.ch/metadata/cs/EBU_cs_p.zip and generate the output in refdata/
-
-If you want to generate your own hierarchical reference vocabularies you need to execute:
-
-```sh
-build/build.sh /path/to/vocs/my-vocabularies.zip /path/to/my/output/dir
-```
-
-Or
-
-```sh
-build/build.sh http://somewhere.com/vocs/my-vocabularies.zip /path/to/my/output/dir
-```
-
-Note: The my-vocabularies.zip file shall contain one or more vocabulary XML files with extension .xml expressed using the TV-Anytime XML Schema.
-
-You can also use a directory name containing the XML files like:
-
-```sh
-build/build.sh /path/to/vocs /path/to/my/output/dir
-```
-
-Or just pass one single XML vocabulary file
-
-```sh
-build/build.sh /path/to/vocs/specific-vocabulary-file.xml /path/to/my/output/dir
 ```
 
 See Also
