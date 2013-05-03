@@ -41,6 +41,9 @@ From javascript the JSON object is not accesible directly. You must use this pub
 *  **<vocabulary>.getUri ()**: *Return a string containing the vocabulary namespace URI.*
 *  **<vocabulary>.getVersionDate ()**: *Return a string containing the vocabulary namespace version date.*
 *  **<vocabulary>.getLang()**: *Return a string containing the vocabulary language.*
+*  **<vocabulary>.stringify()**: *JSON stringify the vocabulary.*
+*  **<vocabulary>.getEquivalent()**: *Return an array of fully qualified URIs containing equivalent terms in other classification schemas.*
+*  **<vocabulary>.getMappings()**: *Return an array of mappings to equivalent terms in external controlled vocabularies.*
 
 See the test folder for more usage examples:
 
