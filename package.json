@@ -1,6 +1,6 @@
 {
   "name": "terms2js",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "This a basic and lightweight JavaScript and JSON version of Metadata Reference Data & Classification Schemes. Stores the vocabularies as JSON objects, accesible as node modules or by browser javascript interpreter. Generated vocabulariy files have no dependencies. The package is completely generic and may be used to generate your own hierarchical reference vocabularies such as the ones expressed with the TV-Anytime XML Schema.",
   "scripts": {
     "test": "node ./test/node-example.js"
@@ -9,7 +9,7 @@
     "type": "git",
     "url": "git://github.com/dplatform/terms2js.git"
   },
-  "main": "lib/termsapi.js",
+  "main": "lib",
   "bin": {
     "terms2js": "bin/terms2js"
   },

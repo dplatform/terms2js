@@ -1,8 +1,8 @@
 // From node the module is accesible with a simple require
-var terms2js = require ('../lib/terms2js');
+var terms2js = require ('../lib');
 var json_roles = require ('../test/en/ebu_RoleCodeCS.json');
 
-var parser = terms2js.createParser ();
+var parser = terms2js.parser.createParser ();
 parser.parse ({ 'en': json_roles });
 
 var langs = parser.getAvailableLanguages ();

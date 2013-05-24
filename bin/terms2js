@@ -28,7 +28,7 @@
  *
  */
 
-var terms2js = require ('../lib/terms2js'),
+var terms2js = require ('../lib'),
     optimist = require ('optimist'),
     fs = require ('fs'),
     path = require ('path'),
@@ -86,7 +86,7 @@ for (var i=0 ; i < vocabulary_files.length ; i++) {
 
   console.log ("Processing vocabulary file "+vocabulary_file);
 
-  var parser = terms2js.createParser ({default_lang: default_lang});
+  var parser = terms2js.parser.createParser ({default_lang: default_lang});
 
   var data = fs.readFileSync (vocabulary_file, 'utf8');
 
