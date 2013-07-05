@@ -35,7 +35,9 @@ From javascript the JSON object is not accesible directly. You must use this pub
 *  **<vocabulary>.getTermUri (termId)**: *Return a string containing the fully qualified term URI.*
 *  **<vocabulary>.isDeprecated (termId)**: *Return boolean value, true if termId is deprecated.*
 *  **<vocabulary>.getAllTermId ()**: *Return an array with all the termId codes supported.*
+*  **<vocabulary>.getAllTermUri ()**: *Return an array with all the term URI supported.*
 *  **<vocabulary>.getAllTermIdMatching (string)**: *Return an array with all the termId matching string.*
+*  **<vocabulary>.getAllTermUriMatching (string)**: *Return an array with all the term URI matching string.*
 *  **<vocabulary>.getTermInfo (termId)**: *Return object {"Name"}. If termId isn't supported return {}.*
 *  **<vocabulary>.isTermUri (term)**: *Return true if term is the fully qualified term URI, false otherwise.*
 *  **<vocabulary>.getUri ()**: *Return a string containing the vocabulary namespace URI.*
