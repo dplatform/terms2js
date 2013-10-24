@@ -36,8 +36,8 @@ From javascript the JSON object is not accesible directly. You must use this pub
 *  **<vocabulary>.isDeprecated (termId)**: *Return boolean value, true if termId is deprecated.*
 *  **<vocabulary>.getAllTermId ()**: *Return an array with all the termId codes supported.*
 *  **<vocabulary>.getAllTermUri ()**: *Return an array with all the term URI supported.*
-*  **<vocabulary>.getAllTermIdMatching (string)**: *Return an array with all the termId matching string.*
-*  **<vocabulary>.getAllTermUriMatching (string)**: *Return an array with all the term URI matching string.*
+*  **<vocabulary>.getAllTermIdMatching (string)**: *Return an array with all the termId matching string. String can be a literal string or a regular expression object.*
+*  **<vocabulary>.getAllTermUriMatching (string)**: *Return an array with all the term URI matching string. String can be a literal string or a regular expression object.*
 *  **<vocabulary>.getTermInfo (termId)**: *Return object {"Name"}. If termId isn't supported return {}.*
 *  **<vocabulary>.isTermUri (term)**: *Return true if term is the fully qualified term URI, false otherwise.*
 *  **<vocabulary>.getUri ()**: *Return a string containing the vocabulary namespace URI.*
@@ -46,7 +46,7 @@ From javascript the JSON object is not accesible directly. You must use this pub
 *  **<vocabulary>.stringify()**: *JSON stringify the vocabulary.*
 *  **<vocabulary>.getEquivalent(termId)**: *Return an array of fully qualified term URI of equivalent terms in other classification schemas.*
 *  **<vocabulary>.getMappings(termId, [uri])**: *Return an array of fully qualified term URI with which termId can be matched in other vocabularies. Results may be filtered by external uri if specified.*
-*  **<vocabulary>.getMappingsMatching (string, [uri])**: *Return an array of fully qualified term URI with which the termId having label string can be matched in other vocabularies. Results may be filtered by external uri if specified.*
+*  **<vocabulary>.getMappingsMatching (string, [uri])**: *Return an array of fully qualified term URI mappings in other vocabularies which the termId label matches string. String can be a literal string or a regular expression object. Results may be filtered by external uri if specified.*
 
 See the test folder for more usage examples:
 
