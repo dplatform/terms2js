@@ -187,7 +187,7 @@ Vocabulary.prototype.getAllTermIdMatching = function (string) {
     if (Object.prototype.toString.call(string) == '[object RegExp]') {
       re = string;
     } else {
-      re = new RegExp (string);
+      re = new RegExp (String(string).replace(/([-()\[\]{}+?*.$\^|,:#<!\\])/g, '\\$1'));
     }
     for (var n in this.voc.names) {
       if (!this.voc.names.hasOwnProperty(n)) continue;
