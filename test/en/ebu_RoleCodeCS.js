@@ -157,7 +157,7 @@ Vocabulary.prototype.getMappings = function (termId, uri) {
   var result = [];
   if (this.voc.mappings[termId]) {
     var filter;
-    if (uri && uri.isArray === true) {
+    if (uri && Array.isArray (uri) === true) {
       filter = uri;
     } else {
       filter = [uri];
