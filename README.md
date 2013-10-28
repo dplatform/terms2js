@@ -45,8 +45,8 @@ From javascript the JSON object is not accesible directly. You must use this pub
 *  **<vocabulary>.getLang()**: *Return a string containing the vocabulary language.*
 *  **<vocabulary>.stringify()**: *JSON stringify the vocabulary.*
 *  **<vocabulary>.getEquivalent(termId)**: *Return an array of fully qualified term URI of equivalent terms in other classification schemas.*
-*  **<vocabulary>.getMappings(termId, [uri])**: *Return an array of fully qualified term URI with which termId can be matched in other vocabularies. Results may be filtered by external uri if specified.*
-*  **<vocabulary>.getMappingsMatching (string, [uri])**: *Return an array of fully qualified term URI mappings in other vocabularies which the termId label matches string. String can be a literal string or a regular expression object. Results may be filtered by external uri if specified.*
+*  **<vocabulary>.getMappings(termId, [uri])**: *Return an array of fully qualified term URI with which termId can be matched in other vocabularies. Results may be filtered by external uri if specified. The external uri may be a single string or an array of strings. *
+*  **<vocabulary>.getMappingsMatching (string, [uri])**: *Return an array of fully qualified term URI mappings in other vocabularies which the termId label matches string. String can be a literal string or a regular expression object. Results may be filtered by external uri if specified. The external uri may be a single string or an array of strings.*
 
 See the test folder for more usage examples:
 
